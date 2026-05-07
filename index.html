@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width,
+initial-scale=1.0,
+maximum-scale=1.0,
+user-scalable=no">
+
+<title>Hari Smart Home AI Dashboard</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+
+:root{
+    --primary:#007bff;
+    --overlay:rgba(255,255,255,0.92);
+}
+
+body{
+    font-family:Arial,sans-serif;
+    margin:0;
+    min-height:100vh;
+
+    background-image:
+    linear-gradient(
+    rgba(0,0,0,0.55),
+    rgba(0,0,0,0.55)),
+
+    url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1920&auto=format&fit=crop');
+
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+    background-attachment:fixed;
+
+    display:flex;
+    flex-direction:column;
+}
+
+/* LOGIN */
+
+#loginOverlay{
+    position:fixed;
+    inset:0;
+    background:#f0f2f5;
+    z-index:9999;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.login-card{
+    width:100%;
+    max-width:400px;
+    background:white;
+    padding:40px;
+    border-radius:24px;
+    box-shadow:0 15px 35px rgba(0,0,0,0.1);
+    text-align:center;
+}
+
+.login-card input{
+    width:100%;
+    padding:15px;
+    margin:10px 0;
+    border:1px solid #ddd;
+    border-radius:12px;
+    box-sizing:border-box;
+    font-size:1rem;
+}
+
+.login-card button{
+    width:100%;
+    padding:15px;
+    background:var(--primary);
+    color:white;
+    border:none;
+    border-radius:12px;
+    cursor:pointer;
+    font-weight:bold;
+    font-size:1rem;
+    margin-top:10px;
+}
+
+/* DASHBOARD */
+
+#dashboardContent{
+    display:none;
+    flex-direction:column;
+    width:100%;
+}
+
+.top-nav{
+    background:rgba(255,255,255,0.88);
+    backdrop-filter:blur(12px);
+    padding:15px 25px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    position:sticky;
+    top:0;
+    z-index:100;
+}
+
+.time-group{
+    text-align:right;
+}
+
+#liveTime{
+    font-weight:bold;
+    font-size:1.3rem;
+    color:var(--primary);
+    margin:0;
+}
+
+#liveDate{
+    font-size:0.9rem;
+    color:#555;
+    margin:0;
+}
+
+.main-grid{
+    display:grid;
+    grid-template-columns:
+    repeat(auto-fit,minmax(320px,1fr));
+
+    gap:25px;
+
+    padding:25px;
+
+    max-width:1300px;
+
+    width:100%;
+
+    margin:0 auto;
+
+    box-sizing:border-box;
+}
+
+.card{
+    background:var(--overlay);
+
+    border-radius:25px;
+
+    padding:30px;
+
+    text-align:center;
+
+    box-shadow:0 12px 30px rgba(0,0,0,0.25);
+}
+
+/* TEMPERATURE */
+
+.gauge{
+    width:140px;
+    height:140px;
+    border-radius:50%;
+    margin:20px auto;
+
+    background:
+    conic-gradient(
+    var(--primary) 0deg,
+    #e2e8f0 0deg);
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    position:relative;
+}
+
+.gauge::after{
+    content:"";
+    position:absolute;
+    width:115px;
+    height:115px;
+    background:white;
+    border-radius:50%;
+}
+
+.gauge-text{
+    position:relative;
+    z-index:10;
+    font-size:1.8rem;
+    font-weight:bold;
+}
+
+/* BUTTONS */
+
+.control-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+    margin-top:20px;
+}
+
+.btn-device{
+    border:none;
+    padding:25px 10px;
+    border-radius:20px;
+    cursor:pointer;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+    font-weight:bold;
+    transition:0.3s;
+    font-size:1rem;
+}
+
+.btn-on{
+    background:#e7f3ff;
+    color:var(--primary);
+    border:2px solid var(--primary);
+}
+
+.btn-off{
+    background:#f8fafc;
+    color:#777;
+    border:2px solid transparent;
+}
+
+/* STATUS */
+
+.status-box{
+    padding:15px;
+    border-radius:15px;
+    font-weight:bold;
+    margin-top:20px;
+    transition:0.3s;
+}
+
+/* FOOTER */
+
+.footer-btns{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+    padding:20px;
+}
+
+#allOff{
+    background:#ff4d4f;
+    color:white;
+    border:none;
+    padding:18px;
+    border-radius:15px;
+    width:100%;
+    max-width:400px;
+    cursor:pointer;
+    font-weight:bold;
+    font-size:1rem;
+}
+
+#logoutBtn{
+    background:#444;
+    color:white;
+    border:none;
+    padding:12px;
+    border-radius:12px;
+    width:100%;
+    max-width:200px;
+    cursor:pointer;
+}
+
+/* MOBILE */
+
+@media(max-width:700px){
+
+    .main-grid{
+        grid-template-columns:1fr;
+        padding:15px;
+    }
+
+    .top-nav{
+        flex-direction:column;
+        gap:10px;
+        text-align:center;
+    }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- LOGIN -->
+
+<div id="loginOverlay">
+
+    <div class="login-card">
+
+        <h1>Hari's Home</h1>
+
+        <p style="color:#666;">
+            Authorized Access Only
+        </p>
+
+        <input type="email"
+        id="email"
+        placeholder="Enter Email">
+
+        <input type="password"
+        id="password"
+        placeholder="Enter Password">
+
+        <button id="loginBtn">
+            Login
+        </button>
+
+        <p id="loginError"
+        style="color:red;display:none;">
+        </p>
+
+    </div>
+
+</div>
+
+<!-- DASHBOARD -->
+
+<div id="dashboardContent">
+
+    <!-- NAV -->
+
+    <nav class="top-nav">
+
+        <div>
+
+            <h2 style="margin:0;">
+                <i class="fas fa-home"></i>
+                IOT DASH
+            </h2>
+
+            <small>
+                Hari Smart Home
+            </small>
+
+        </div>
+
+        <div class="time-group">
+
+            <p id="liveTime">
+                00:00:00
+            </p>
+
+            <p id="liveDate">
+                Loading...
+            </p>
+
+        </div>
+
+    </nav>
+
+    <!-- GRID -->
+
+    <div class="main-grid">
+
+        <!-- TEMPERATURE -->
+
+        <div class="card">
+
+            <small style="font-weight:bold;color:#888;">
+                TEMPERATURE
+            </small>
+
+            <div class="gauge"
+            id="tempGauge">
+
+                <span class="gauge-text">
+
+                    <span id="tempVal">
+                        --
+                    </span>°C
+
+                </span>
+
+            </div>
+
+        </div>
+
+        <!-- HUMIDITY + PIR -->
+
+        <div class="card">
+
+            <small style="font-weight:bold;color:#888;">
+                ENVIRONMENT & SECURITY
+            </small>
+
+            <h3 style="
+            font-size:2rem;
+            margin-top:25px;">
+
+                <i class="fas fa-tint"
+                style="color:#2196f3;"></i>
+
+                <span id="humVal">
+                    --
+                </span>%
+
+            </h3>
+
+            <div id="motStatus"
+            class="status-box"
+            style="
+            background:#edf2f7;
+            color:#555;">
+
+            SCANNING MOTION...
+
+            </div>
+
+        </div>
+
+        <!-- MQ9 -->
+
+        <div class="card">
+
+            <small style="font-weight:bold;color:#888;">
+                ADVANCED GAS MONITOR
+            </small>
+
+            <h1 style="
+            font-size:3rem;
+            margin-top:20px;
+            color:#ff9800;">
+
+                <i class="fas fa-smog"></i>
+
+            </h1>
+
+            <h1 id="gasPPM"
+            style="
+            font-size:3rem;
+            margin:10px 0;
+            color:#333;">
+
+                --
+
+            </h1>
+
+            <small style="
+            color:#777;
+            font-size:1rem;">
+
+                GAS CONCENTRATION (PPM)
+
+            </small>
+
+            <h3 id="gasType"
+            style="
+            margin-top:20px;
+            color:#444;">
+
+                WAITING...
+
+            </h3>
+
+            <div id="gasStatus"
+            class="status-box"
+            style="
+            background:#edf2f7;
+            color:#555;">
+
+            SENSOR INITIALIZING...
+
+            </div>
+
+        </div>
+
+        <!-- RELAYS -->
+
+        <div class="card">
+
+            <small style="font-weight:bold;color:#888;">
+                QUICK CONTROLS
+            </small>
+
+            <div class="control-grid">
+
+                <button class="btn-device btn-off"
+                id="btn1">
+
+                    <i class="fas fa-lightbulb"></i>
+
+                    Light
+
+                </button>
+
+                <button class="btn-device btn-off"
+                id="btn2">
+
+                    <i class="fas fa-fan"></i>
+
+                    Fan
+
+                </button>
+
+                <button class="btn-device btn-off"
+                id="btn3">
+
+                    <i class="fas fa-snowflake"></i>
+
+                    AC
+
+                </button>
+
+                <button class="btn-device btn-off"
+                id="btn4">
+
+                    <i class="fas fa-plug"></i>
+
+                    Fridge
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+
+    <div class="footer-btns">
+
+        <button id="allOff">
+
+            <i class="fas fa-power-off"></i>
+
+            EMERGENCY SHUTDOWN
+
+        </button>
+
+        <button id="logoutBtn">
+
+            Logout
+
+        </button>
+
+    </div>
+
+</div>
+
+<!-- FIREBASE -->
+
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+
+<script>
+
+/* FIREBASE */
+
+const firebaseConfig = {
+
+    apiKey:
+    "AIzaSyCuGWFGCUMByBnOwtH_e0QbiMQelQxL7cQ",
+
+    authDomain:
+    "project1-881b2.firebaseapp.com",
+
+    databaseURL:
+    "https://project1-881b2-default-rtdb.europe-west1.firebasedatabase.app",
+
+    projectId:
+    "project1-881b2"
+
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const auth = firebase.auth();
+
+const db = firebase.database();
+
+/* CLOCK */
+
+setInterval(() => {
+
+    const now = new Date();
+
+    document.getElementById("liveTime")
+    .innerText =
+    now.toLocaleTimeString();
+
+    document.getElementById("liveDate")
+    .innerText =
+    now.toLocaleDateString(
+    'en-GB',{
+
+        weekday:'long',
+        day:'numeric',
+        month:'short'
+
+    });
+
+},1000);
+
+/* LOGIN */
+
+document.getElementById("loginBtn")
+.onclick = () => {
+
+    const email =
+    document.getElementById("email").value;
+
+    const password =
+    document.getElementById("password").value;
+
+    auth.signInWithEmailAndPassword(
+    email,password)
+
+    .then(() => {
+
+        document.getElementById(
+        "loginOverlay").style.display =
+        "none";
+
+        document.getElementById(
+        "dashboardContent").style.display =
+        "flex";
+
+        startLiveSync();
+
+    })
+
+    .catch(error => {
+
+        const err =
+        document.getElementById(
+        "loginError");
+
+        err.style.display = "block";
+
+        err.innerText =
+        "Login Failed : " + error.message;
+
+    });
+
+};
+
+/* LIVE SYNC */
+
+function startLiveSync(){
+
+    /* TEMPERATURE */
+
+    db.ref("temperature")
+    .on("value", snap => {
+
+        const val = snap.val();
+
+        if(val === "Disconnected"){
+
+            document.getElementById(
+            "tempVal").innerText = "--";
+        }
+
+        else if(val !== null){
+
+            document.getElementById(
+            "tempVal").innerText =
+            parseFloat(val).toFixed(1);
+
+            document.getElementById(
+            "tempGauge").style.background =
+
+            `conic-gradient(
+            var(--primary)
+            ${(val/50)*360}deg,
+            #e2e8f0 0deg)`;
+        }
+
+    });
+
+    /* HUMIDITY */
+
+    db.ref("humidity")
+    .on("value", snap => {
+
+        const val = snap.val();
+
+        if(val === "Disconnected"){
+
+            document.getElementById(
+            "humVal").innerText = "--";
+        }
+
+        else if(val !== null){
+
+            document.getElementById(
+            "humVal").innerText =
+            parseFloat(val).toFixed(1);
+        }
+
+    });
+
+    /* MOTION */
+
+    db.ref("motionStatus")
+    .on("value", snap => {
+
+        const active = snap.val();
+
+        const box =
+        document.getElementById(
+        "motStatus");
+
+        if(active){
+
+            box.innerText =
+            "MOTION DETECTED!";
+
+            box.style.background =
+            "#fff5f5";
+
+            box.style.color =
+            "#c53030";
+        }
+
+        else{
+
+            box.innerText =
+            "AREA SECURE";
+
+            box.style.background =
+            "#f0fff4";
+
+            box.style.color =
+            "#2f855a";
+        }
+
+    });
+
+    /* GAS PPM */
+
+    db.ref("gasPPM")
+    .on("value", snap => {
+
+        const val = snap.val();
+
+        if(val === "--"){
+
+            document.getElementById(
+            "gasPPM").innerText = "--";
+        }
+
+        else if(val !== null){
+
+            document.getElementById(
+            "gasPPM").innerText = val;
+        }
+
+    });
+
+    /* GAS TYPE */
+
+    db.ref("gasType")
+    .on("value", snap => {
+
+        const val = snap.val();
+
+        if(val !== null){
+
+            document.getElementById(
+            "gasType").innerText = val;
+        }
+
+    });
+
+    /* GAS STATUS */
+
+    db.ref("gasStatus")
+    .on("value", snap => {
+
+        const val = snap.val();
+
+        const box =
+        document.getElementById(
+        "gasStatus");
+
+        if(val === "Disconnected"){
+
+            box.innerText =
+            "MQ9 NOT CONNECTED";
+
+            box.style.background =
+            "#edf2f7";
+
+            box.style.color =
+            "#555";
+        }
+
+        else if(val === "DANGER"){
+
+            box.innerText =
+            "DANGEROUS GAS DETECTED!";
+
+            box.style.background =
+            "#fff5f5";
+
+            box.style.color =
+            "#c53030";
+        }
+
+        else{
+
+            box.innerText =
+            "AIR QUALITY SAFE";
+
+            box.style.background =
+            "#f0fff4";
+
+            box.style.color =
+            "#2f855a";
+        }
+
+    });
+
+    /* RELAYS */
+
+    [1,2,3,4].forEach(i => {
+
+        const relayRef =
+        db.ref("relay" + i);
+
+        relayRef.on("value",
+        snap => {
+
+            const state =
+            snap.val();
+
+            const btn =
+            document.getElementById(
+            "btn" + i);
+
+            btn.className =
+            state ?
+
+            "btn-device btn-on" :
+
+            "btn-device btn-off";
+
+        });
+
+        document.getElementById(
+        "btn" + i).onclick = () => {
+
+            relayRef.once("value")
+            .then(snap => {
+
+                relayRef.set(
+                !snap.val());
+
+            });
+
+        };
+
+    });
+
+}
+
+/* ALL OFF */
+
+document.getElementById("allOff")
+.onclick = () => {
+
+    db.ref().update({
+
+        relay1:false,
+        relay2:false,
+        relay3:false,
+        relay4:false
+
+    });
+
+};
+
+/* LOGOUT */
+
+document.getElementById("logoutBtn")
+.onclick = () => {
+
+    auth.signOut().then(() => {
+
+        location.reload();
+
+    });
+
+};
+
+/* INTERNET */
+
+window.addEventListener(
+"offline", () => {
+
+    alert(
+    "Internet Disconnected");
+
+});
+
+</script>
+
+</body>
+</html>
