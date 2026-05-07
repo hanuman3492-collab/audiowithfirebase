@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
 <meta charset="UTF-8">
 
 <meta name="viewport"
 content="width=device-width,
-initial-scale=1.0,
-maximum-scale=1.0,
-user-scalable=no">
+initial-scale=1.0">
 
-<title>Hari Smart Home AI Dashboard</title>
+<title>Hari Audio Surveillance</title>
 
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -19,28 +18,24 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
 
 :root{
     --primary:#007bff;
-    --overlay:rgba(255,255,255,0.92);
 }
 
 body{
-    font-family:Arial,sans-serif;
     margin:0;
-    min-height:100vh;
+    font-family:Arial,sans-serif;
 
     background-image:
     linear-gradient(
-    rgba(0,0,0,0.55),
-    rgba(0,0,0,0.55)),
+    rgba(0,0,0,0.65),
+    rgba(0,0,0,0.65)),
 
     url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1920&auto=format&fit=crop');
 
     background-size:cover;
     background-position:center;
-    background-repeat:no-repeat;
     background-attachment:fixed;
 
-    display:flex;
-    flex-direction:column;
+    min-height:100vh;
 }
 
 /* LOGIN */
@@ -49,237 +44,126 @@ body{
     position:fixed;
     inset:0;
     background:#f0f2f5;
-    z-index:9999;
     display:flex;
-    align-items:center;
     justify-content:center;
-    padding:20px;
+    align-items:center;
+    z-index:9999;
 }
 
 .login-card{
-    width:100%;
-    max-width:400px;
     background:white;
     padding:40px;
-    border-radius:24px;
-    box-shadow:0 15px 35px rgba(0,0,0,0.1);
+    border-radius:25px;
+    width:90%;
+    max-width:400px;
     text-align:center;
+    box-shadow:0 10px 30px rgba(0,0,0,0.2);
 }
 
 .login-card input{
     width:100%;
     padding:15px;
-    margin:10px 0;
-    border:1px solid #ddd;
+    margin-top:15px;
     border-radius:12px;
+    border:1px solid #ccc;
     box-sizing:border-box;
-    font-size:1rem;
 }
 
 .login-card button{
     width:100%;
     padding:15px;
-    background:var(--primary);
-    color:white;
+    margin-top:20px;
     border:none;
     border-radius:12px;
-    cursor:pointer;
-    font-weight:bold;
+    background:var(--primary);
+    color:white;
     font-size:1rem;
-    margin-top:10px;
+    cursor:pointer;
 }
 
 /* DASHBOARD */
 
-#dashboardContent{
+#dashboard{
     display:none;
-    flex-direction:column;
-    width:100%;
+    padding:20px;
 }
 
-.top-nav{
-    background:rgba(255,255,255,0.88);
-    backdrop-filter:blur(12px);
-    padding:15px 25px;
+.topbar{
+    background:rgba(255,255,255,0.92);
+    border-radius:20px;
+    padding:20px;
     display:flex;
     justify-content:space-between;
     align-items:center;
-    position:sticky;
-    top:0;
-    z-index:100;
+    margin-bottom:25px;
 }
 
-.time-group{
-    text-align:right;
-}
-
-#liveTime{
-    font-weight:bold;
-    font-size:1.3rem;
-    color:var(--primary);
-    margin:0;
-}
-
-#liveDate{
-    font-size:0.9rem;
-    color:#555;
-    margin:0;
-}
-
-.main-grid{
+.grid{
     display:grid;
     grid-template-columns:
     repeat(auto-fit,minmax(320px,1fr));
 
     gap:25px;
-
-    padding:25px;
-
-    max-width:1300px;
-
-    width:100%;
-
-    margin:0 auto;
-
-    box-sizing:border-box;
 }
 
 .card{
-    background:var(--overlay);
+    background:rgba(255,255,255,0.92);
 
     border-radius:25px;
 
-    padding:30px;
+    padding:25px;
 
-    text-align:center;
-
-    box-shadow:0 12px 30px rgba(0,0,0,0.25);
+    box-shadow:0 10px 25px rgba(0,0,0,0.2);
 }
 
-/* TEMPERATURE */
-
-.gauge{
-    width:140px;
-    height:140px;
-    border-radius:50%;
-    margin:20px auto;
-
-    background:
-    conic-gradient(
-    var(--primary) 0deg,
-    #e2e8f0 0deg);
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    position:relative;
-}
-
-.gauge::after{
-    content:"";
-    position:absolute;
-    width:115px;
-    height:115px;
-    background:white;
-    border-radius:50%;
-}
-
-.gauge-text{
-    position:relative;
-    z-index:10;
-    font-size:1.8rem;
+.status-box{
+    margin-top:20px;
+    padding:15px;
+    border-radius:15px;
     font-weight:bold;
+    text-align:center;
+}
+
+/* AUDIO PLAYER */
+
+#audioList{
+    margin-top:20px;
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+}
+
+.audio-item{
+    background:#f7fafc;
+    border-radius:15px;
+    padding:15px;
+}
+
+audio{
+    width:100%;
+    margin-top:10px;
 }
 
 /* BUTTONS */
 
-.control-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:15px;
-    margin-top:20px;
-}
-
-.btn-device{
+.action-btn{
     border:none;
-    padding:25px 10px;
-    border-radius:20px;
-    cursor:pointer;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:10px;
-    font-weight:bold;
-    transition:0.3s;
-    font-size:1rem;
-}
-
-.btn-on{
-    background:#e7f3ff;
-    color:var(--primary);
-    border:2px solid var(--primary);
-}
-
-.btn-off{
-    background:#f8fafc;
-    color:#777;
-    border:2px solid transparent;
-}
-
-/* STATUS */
-
-.status-box{
     padding:15px;
     border-radius:15px;
-    font-weight:bold;
-    margin-top:20px;
-    transition:0.3s;
-}
-
-/* FOOTER */
-
-.footer-btns{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:10px;
-    padding:20px;
-}
-
-#allOff{
-    background:#ff4d4f;
-    color:white;
-    border:none;
-    padding:18px;
-    border-radius:15px;
-    width:100%;
-    max-width:400px;
     cursor:pointer;
     font-weight:bold;
-    font-size:1rem;
+    width:100%;
+    margin-top:15px;
 }
 
-#logoutBtn{
+.logout{
     background:#444;
     color:white;
-    border:none;
-    padding:12px;
-    border-radius:12px;
-    width:100%;
-    max-width:200px;
-    cursor:pointer;
 }
-
-/* MOBILE */
 
 @media(max-width:700px){
 
-    .main-grid{
-        grid-template-columns:1fr;
-        padding:15px;
-    }
-
-    .top-nav{
+    .topbar{
         flex-direction:column;
         gap:10px;
         text-align:center;
@@ -298,10 +182,13 @@ body{
 
     <div class="login-card">
 
-        <h1>Hari's Home</h1>
+        <h1>
+            <i class="fas fa-microphone"></i>
+            Hari Audio AI
+        </h1>
 
         <p style="color:#666;">
-            Authorized Access Only
+            Smart Surveillance System
         </p>
 
         <input type="email"
@@ -317,7 +204,10 @@ body{
         </button>
 
         <p id="loginError"
-        style="color:red;display:none;">
+        style="
+        color:red;
+        display:none;
+        margin-top:15px;">
         </p>
 
     </div>
@@ -326,200 +216,87 @@ body{
 
 <!-- DASHBOARD -->
 
-<div id="dashboardContent">
+<div id="dashboard">
 
-    <!-- NAV -->
+    <!-- TOPBAR -->
 
-    <nav class="top-nav">
+    <div class="topbar">
 
         <div>
 
             <h2 style="margin:0;">
-                <i class="fas fa-home"></i>
-                IOT DASH
+                <i class="fas fa-shield-alt"></i>
+                AUDIO SURVEILLANCE
             </h2>
 
             <small>
-                Hari Smart Home
+                Firebase Smart Monitoring
             </small>
 
         </div>
 
-        <div class="time-group">
+        <div>
 
-            <p id="liveTime">
-                00:00:00
-            </p>
-
-            <p id="liveDate">
-                Loading...
-            </p>
+            <h3 id="clock"
+            style="
+            margin:0;
+            color:var(--primary);">
+            </h3>
 
         </div>
 
-    </nav>
+    </div>
 
     <!-- GRID -->
 
-    <div class="main-grid">
+    <div class="grid">
 
-        <!-- TEMPERATURE -->
-
-        <div class="card">
-
-            <small style="font-weight:bold;color:#888;">
-                TEMPERATURE
-            </small>
-
-            <div class="gauge"
-            id="tempGauge">
-
-                <span class="gauge-text">
-
-                    <span id="tempVal">
-                        --
-                    </span>°C
-
-                </span>
-
-            </div>
-
-        </div>
-
-        <!-- HUMIDITY + PIR -->
+        <!-- SYSTEM STATUS -->
 
         <div class="card">
 
-            <small style="font-weight:bold;color:#888;">
-                ENVIRONMENT & SECURITY
-            </small>
+            <small style="
+            font-weight:bold;
+            color:#777;">
 
-            <h3 style="
-            font-size:2rem;
-            margin-top:25px;">
+            SYSTEM STATUS
 
-                <i class="fas fa-tint"
-                style="color:#2196f3;"></i>
-
-                <span id="humVal">
-                    --
-                </span>%
-
-            </h3>
-
-            <div id="motStatus"
-            class="status-box"
-            style="
-            background:#edf2f7;
-            color:#555;">
-
-            SCANNING MOTION...
-
-            </div>
-
-        </div>
-
-        <!-- MQ9 -->
-
-        <div class="card">
-
-            <small style="font-weight:bold;color:#888;">
-                ADVANCED GAS MONITOR
             </small>
 
             <h1 style="
             font-size:3rem;
-            margin-top:20px;
-            color:#ff9800;">
+            margin-top:25px;
+            color:#007bff;">
 
-                <i class="fas fa-smog"></i>
-
-            </h1>
-
-            <h1 id="gasPPM"
-            style="
-            font-size:3rem;
-            margin:10px 0;
-            color:#333;">
-
-                --
+                <i class="fas fa-wave-square"></i>
 
             </h1>
 
-            <small style="
-            color:#777;
-            font-size:1rem;">
-
-                GAS CONCENTRATION (PPM)
-
-            </small>
-
-            <h3 id="gasType"
-            style="
-            margin-top:20px;
-            color:#444;">
-
-                WAITING...
-
-            </h3>
-
-            <div id="gasStatus"
+            <div id="systemStatus"
             class="status-box"
             style="
-            background:#edf2f7;
-            color:#555;">
+            background:#f0fff4;
+            color:#2f855a;">
 
-            SENSOR INITIALIZING...
+            LISTENING FOR AUDIO...
 
             </div>
 
         </div>
 
-        <!-- RELAYS -->
+        <!-- AUDIO RECORDINGS -->
 
         <div class="card">
 
-            <small style="font-weight:bold;color:#888;">
-                QUICK CONTROLS
+            <small style="
+            font-weight:bold;
+            color:#777;">
+
+            AUDIO RECORDINGS
+
             </small>
 
-            <div class="control-grid">
-
-                <button class="btn-device btn-off"
-                id="btn1">
-
-                    <i class="fas fa-lightbulb"></i>
-
-                    Light
-
-                </button>
-
-                <button class="btn-device btn-off"
-                id="btn2">
-
-                    <i class="fas fa-fan"></i>
-
-                    Fan
-
-                </button>
-
-                <button class="btn-device btn-off"
-                id="btn3">
-
-                    <i class="fas fa-snowflake"></i>
-
-                    AC
-
-                </button>
-
-                <button class="btn-device btn-off"
-                id="btn4">
-
-                    <i class="fas fa-plug"></i>
-
-                    Fridge
-
-                </button>
+            <div id="audioList">
 
             </div>
 
@@ -527,25 +304,14 @@ body{
 
     </div>
 
-    <!-- FOOTER -->
+    <!-- LOGOUT -->
 
-    <div class="footer-btns">
+    <button id="logoutBtn"
+    class="action-btn logout">
 
-        <button id="allOff">
+    Logout
 
-            <i class="fas fa-power-off"></i>
-
-            EMERGENCY SHUTDOWN
-
-        </button>
-
-        <button id="logoutBtn">
-
-            Logout
-
-        </button>
-
-    </div>
+    </button>
 
 </div>
 
@@ -559,21 +325,21 @@ body{
 
 <script>
 
-/* FIREBASE */
+/* FIREBASE CONFIG */
 
 const firebaseConfig = {
 
     apiKey:
-    "AIzaSyCuGWFGCUMByBnOwtH_e0QbiMQelQxL7cQ",
+    "AIzaSyBNOdjL_mDvkOk5Q5Qfzt_3COU8MV06xxs",
 
     authDomain:
-    "project1-881b2.firebaseapp.com",
+    "audiowithfirebase-b3d3f.firebaseapp.com",
 
     databaseURL:
-    "https://project1-881b2-default-rtdb.europe-west1.firebasedatabase.app",
+    "https://audiowithfirebase-b3d3f-default-rtdb.asia-southeast1.firebasedatabase.app",
 
     projectId:
-    "project1-881b2"
+    "audiowithfirebase-b3d3f"
 
 };
 
@@ -587,22 +353,9 @@ const db = firebase.database();
 
 setInterval(() => {
 
-    const now = new Date();
-
-    document.getElementById("liveTime")
+    document.getElementById("clock")
     .innerText =
-    now.toLocaleTimeString();
-
-    document.getElementById("liveDate")
-    .innerText =
-    now.toLocaleDateString(
-    'en-GB',{
-
-        weekday:'long',
-        day:'numeric',
-        month:'short'
-
-    });
+    new Date().toLocaleTimeString();
 
 },1000);
 
@@ -627,10 +380,10 @@ document.getElementById("loginBtn")
         "none";
 
         document.getElementById(
-        "dashboardContent").style.display =
-        "flex";
+        "dashboard").style.display =
+        "block";
 
-        startLiveSync();
+        startSync();
 
     })
 
@@ -642,256 +395,59 @@ document.getElementById("loginBtn")
 
         err.style.display = "block";
 
-        err.innerText =
-        "Login Failed : " + error.message;
+        err.innerText = error.message;
 
     });
 
 };
 
-/* LIVE SYNC */
+/* AUDIO SYNC */
 
-function startLiveSync(){
+function startSync(){
 
-    /* TEMPERATURE */
+    db.ref("audioFiles")
+    .on("child_added", snap => {
 
-    db.ref("temperature")
-    .on("value", snap => {
+        const url = snap.val();
 
-        const val = snap.val();
-
-        if(val === "Disconnected"){
-
-            document.getElementById(
-            "tempVal").innerText = "--";
-        }
-
-        else if(val !== null){
-
-            document.getElementById(
-            "tempVal").innerText =
-            parseFloat(val).toFixed(1);
-
-            document.getElementById(
-            "tempGauge").style.background =
-
-            `conic-gradient(
-            var(--primary)
-            ${(val/50)*360}deg,
-            #e2e8f0 0deg)`;
-        }
-
-    });
-
-    /* HUMIDITY */
-
-    db.ref("humidity")
-    .on("value", snap => {
-
-        const val = snap.val();
-
-        if(val === "Disconnected"){
-
-            document.getElementById(
-            "humVal").innerText = "--";
-        }
-
-        else if(val !== null){
-
-            document.getElementById(
-            "humVal").innerText =
-            parseFloat(val).toFixed(1);
-        }
-
-    });
-
-    /* MOTION */
-
-    db.ref("motionStatus")
-    .on("value", snap => {
-
-        const active = snap.val();
-
-        const box =
+        const list =
         document.getElementById(
-        "motStatus");
+        "audioList");
 
-        if(active){
+        const item =
+        document.createElement("div");
 
-            box.innerText =
-            "MOTION DETECTED!";
+        item.className =
+        "audio-item";
 
-            box.style.background =
-            "#fff5f5";
+        item.innerHTML = `
 
-            box.style.color =
-            "#c53030";
-        }
+        <strong>
+        Audio Recording
+        </strong>
 
-        else{
+        <audio controls>
 
-            box.innerText =
-            "AREA SECURE";
+            <source src="${url}"
+            type="audio/wav">
 
-            box.style.background =
-            "#f0fff4";
+        </audio>
 
-            box.style.color =
-            "#2f855a";
-        }
+        `;
 
-    });
-
-    /* GAS PPM */
-
-    db.ref("gasPPM")
-    .on("value", snap => {
-
-        const val = snap.val();
-
-        if(val === "--"){
-
-            document.getElementById(
-            "gasPPM").innerText = "--";
-        }
-
-        else if(val !== null){
-
-            document.getElementById(
-            "gasPPM").innerText = val;
-        }
-
-    });
-
-    /* GAS TYPE */
-
-    db.ref("gasType")
-    .on("value", snap => {
-
-        const val = snap.val();
-
-        if(val !== null){
-
-            document.getElementById(
-            "gasType").innerText = val;
-        }
-
-    });
-
-    /* GAS STATUS */
-
-    db.ref("gasStatus")
-    .on("value", snap => {
-
-        const val = snap.val();
-
-        const box =
-        document.getElementById(
-        "gasStatus");
-
-        if(val === "Disconnected"){
-
-            box.innerText =
-            "MQ9 NOT CONNECTED";
-
-            box.style.background =
-            "#edf2f7";
-
-            box.style.color =
-            "#555";
-        }
-
-        else if(val === "DANGER"){
-
-            box.innerText =
-            "DANGEROUS GAS DETECTED!";
-
-            box.style.background =
-            "#fff5f5";
-
-            box.style.color =
-            "#c53030";
-        }
-
-        else{
-
-            box.innerText =
-            "AIR QUALITY SAFE";
-
-            box.style.background =
-            "#f0fff4";
-
-            box.style.color =
-            "#2f855a";
-        }
-
-    });
-
-    /* RELAYS */
-
-    [1,2,3,4].forEach(i => {
-
-        const relayRef =
-        db.ref("relay" + i);
-
-        relayRef.on("value",
-        snap => {
-
-            const state =
-            snap.val();
-
-            const btn =
-            document.getElementById(
-            "btn" + i);
-
-            btn.className =
-            state ?
-
-            "btn-device btn-on" :
-
-            "btn-device btn-off";
-
-        });
-
-        document.getElementById(
-        "btn" + i).onclick = () => {
-
-            relayRef.once("value")
-            .then(snap => {
-
-                relayRef.set(
-                !snap.val());
-
-            });
-
-        };
+        list.prepend(item);
 
     });
 
 }
-
-/* ALL OFF */
-
-document.getElementById("allOff")
-.onclick = () => {
-
-    db.ref().update({
-
-        relay1:false,
-        relay2:false,
-        relay3:false,
-        relay4:false
-
-    });
-
-};
 
 /* LOGOUT */
 
 document.getElementById("logoutBtn")
 .onclick = () => {
 
-    auth.signOut().then(() => {
+    auth.signOut()
+    .then(() => {
 
         location.reload();
 
